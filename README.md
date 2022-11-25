@@ -9,4 +9,6 @@ todo:
 <br/>
 3,the richtext can shrink too.
 <br/>
-4,most and most,etc.
+4,china chess game logic
+<br/>
+5,most and most,etc.
