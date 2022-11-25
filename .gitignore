@@ -5,4 +5,5 @@ build/
 profiles/
 native
 node_modules/
+settings/
 *.meta
