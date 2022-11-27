@@ -165,7 +165,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "4afde0b1-2a28-429b-ae23-2ad52bd9cba3@f9941",
+      "__uuid__": "55c70d19-97c8-4b72-abc0-21f3fc815a82@513a7",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -180,7 +180,10 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_useGrayscale": false,
-    "_atlas": null,
+    "_atlas": {
+      "__uuid__": "55c70d19-97c8-4b72-abc0-21f3fc815a82",
+      "__expectedType__": "cc.SpriteAtlas"
+    },
     "_id": ""
   },
   {
@@ -262,7 +265,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 55.62,
+      "width": 46.51162790697675,
       "height": 63
     },
     "_anchorPoint": {
@@ -289,15 +292,21 @@
       "__id__": 12
     },
     "_lineHeight": 50,
-    "_string": "<color=#ff0000>1</color><color=#0f00ff>0</color>",
+    "_string": "<img src='red_ju'/>",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_fontSize": 50,
     "_maxWidth": 0,
     "_fontFamily": "Arial",
-    "_font": null,
-    "_isSystemFontUsed": true,
-    "_userDefinedFont": null,
+    "_font": {
+      "__uuid__": "29158daf-cc1e-41c4-81b8-3e83c35b6591",
+      "__expectedType__": "cc.TTFFont"
+    },
+    "_isSystemFontUsed": false,
+    "_userDefinedFont": {
+      "__uuid__": "29158daf-cc1e-41c4-81b8-3e83c35b6591",
+      "__expectedType__": "cc.TTFFont"
+    },
     "_cacheMode": 0,
     "_imageAtlas": {
       "__uuid__": "55c70d19-97c8-4b72-abc0-21f3fc815a82",

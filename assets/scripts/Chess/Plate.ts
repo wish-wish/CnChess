@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Color, Graphics, UITransform, Size, Vec3, Vec2, Vec4, isUnicodeCJK, fragmentText, Label, math, VERSION, JavaScript, TypeScript, Prefab, instantiate, RichText, RichTextComponent, Quat } from 'cc';
+import { _decorator, Component, Node, Color, Graphics, UITransform, Size, Vec3, Vec2, Vec4, isUnicodeCJK, fragmentText, Label, math, VERSION, JavaScript, TypeScript, Prefab, instantiate, RichText, RichTextComponent, Quat, LabelComponent, SpriteComponent, SpriteFrame, Texture2D } from 'cc';
 import { Utils } from '../Utils';
 const { ccclass, property } = _decorator;
 
@@ -41,6 +41,9 @@ export class Plate extends Component {
     redpos:number[][]=[[0,0,8],[1,1,7],[2,19,25],[4,3,5],[3,2,6],[5,4],[6,27,29,31,33,35]];
     allpos:Map<number,string>=new Map<number,string>();
     cells:Size;
+    rect:Vec3[]=[];
+    border:number=15;
+    edge:number=20;
     initPos()
     {
         for(let i=0;i<this.blackpos.length;i++)
@@ -73,7 +76,7 @@ export class Plate extends Component {
         this.ut=this.getComponent(UITransform);
         this.draw();
         this.initPos();
-        console.log("start");
+        console.log("start");        
         Utils.loadPrefabs("cell/Chess",(prefab:Prefab)=>{
             this.allpos.forEach((img:string,key:number)=>{
                 let n=instantiate(prefab);
@@ -81,8 +84,14 @@ export class Plate extends Component {
                 rtc.string="<img src='"+img+"'/>";
                 rtc.lineHeight=100;
                 rtc.fontSize=100;
-                n.setParent(this.node);
-                n.setPosition(this.xPoints[key]);                
+                rtc.node.active=true;
+                // let sprite=n.getComponentInChildren(SpriteComponent);
+                // sprite.node.active=true;
+                // sprite.spriteFrame=new SpriteFrame();
+                // sprite.spriteFrame.texture=new Texture2D();
+                // sprite.spriteFrame.texture.
+                // n.setParent(this.node);
+                // n.setPosition(this.xPoints[key]);                
                 //let scale=Math.sqrt((this.cells.width/90));
                 //n.setScale(new Vec3(scale,scale,scale));
             });
@@ -93,6 +102,7 @@ export class Plate extends Component {
                 let n=instantiate(prefab);
                 let rtc=n.getComponentInChildren(RichTextComponent);
                 rtc.string=words[i];                
+                rtc.fontSize=50;
                 n.setParent(this.node);                
                 n.setPosition(this.xPoints[this.xWords[i]].add(new Vec3(this.cells.width/2,this.cells.height/2,0)));
                 if(i>1)
@@ -100,31 +110,55 @@ export class Plate extends Component {
                     let quat=math.Quat.fromEuler(n.rotation,0,0,180)
                     n.setRotation(quat);
                 }                
-            }                     
-        });
+            }          
+            let ords:string="九八七六五四三二一987654321";
+            for(let i=0;i<ords.length;i++)
+            {
+                let n=instantiate(prefab);
+                let rtc=n.getComponentInChildren(RichTextComponent);
+                rtc.string=ords[i]; 
+                rtc.fontSize=30;               
+                n.setParent(this.node);    
+                let idx=i;
+                if(i>8) 
+                {
+                    idx=this.xPoints.length-i-1;
+                    let pos=new Vec3(this.xPoints[idx].x,this.rect[2].y,0);
+                    n.setPosition(pos);
+                }
+                else
+                {
+                    let pos=new Vec3(this.xPoints[idx].x,this.rect[0].y,0);
+                    n.setPosition(pos);
+                }                
+            }
+        });        
     }        
     draw()
     {                
-        let border=5;
+        let border=25,edge=20;
+        this.border=border;
+        this.edge=edge;
         let s=this.ut.contentSize;
         this.grap.strokeColor=Color.RED;
         //bigbox
-        let pts:Vec3[]=[];
+        let pts:Vec3[]=[];        
         pts.push(new Vec3(-s.width/2+border,-s.height/2+border,0));
         pts.push(new Vec3(-s.width/2+border,s.height/2-border,0));
         pts.push(new Vec3(s.width/2-border,s.height/2-border,0));
         pts.push(new Vec3(s.width/2-border,-s.height/2+border,0));
+        this.rect.push(...pts);
         //points
         let row=9,col=8;
-        let width=(s.width-border*2)/(col+1);
-        let height=(s.height-border*2)/(row+1);
+        let width=(s.width-border*2-edge*2)/(col+1);
+        let height=(s.height-border*2-edge*2)/(row+1);
         this.cells=new Size(width,height);
         this.grap.strokeColor=Color.RED;
         for(let i=0;i<row+1;i++)
         {
             for(let j=0;j<col+1;j++)
             {
-                this.xPoints.push(new Vec3(border+width*(j+0.5)-s.width/2,border+height*(i+0.5)-s.height/2,0));
+                this.xPoints.push(new Vec3(border+edge+width*(j+0.5)-s.width/2,border+edge+height*(i+0.5)-s.height/2,0));
             }
         }
         this.grap.stroke();
@@ -134,10 +168,11 @@ export class Plate extends Component {
         {   
             this.grap.lineTo(pts[i].x,pts[i].y);
         }        
+        
         for(let i=0;i<col+1;i++)
         {
-            let leftx=pts[0].x+i*width+width/2;
-            let lefty=pts[0].y+height/2
+            let leftx=pts[0].x+i*width+width/2+edge;
+            let lefty=pts[0].y+height/2+edge
             if(i>0&&i<col)
             {
                 this.grap.moveTo(leftx,lefty);
@@ -153,10 +188,10 @@ export class Plate extends Component {
         }
         for(let i=0;i<row+1;i++)
         {
-            let leftx=pts[0].x+width/2;
-            let lefty=pts[0].y+height/2;
+            let leftx=pts[0].x+width/2+edge;
+            let lefty=pts[0].y+height/2+edge;
             this.grap.moveTo(leftx,lefty+height*i);
-            this.grap.lineTo(leftx+s.width-border*2-width,lefty+height*i);
+            this.grap.lineTo(leftx+s.width-border*2-width-edge*2,lefty+height*i);
         }
         
         this.grap.moveTo(this.xPoints[this.XRoad[0]].x,this.xPoints[this.XRoad[0]].y);
