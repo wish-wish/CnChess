@@ -1,9 +1,13 @@
 import { _decorator, Component, Node } from 'cc';
 import { Utils } from '../Utils';
+import { Piece,PuBu } from './Piece';
 const { ccclass, property } = _decorator;
 
 @ccclass('Qipu')
 export class Qipu extends Component {
+    
+    public FightPuBus:PuBu[]=[];
+
     start() {
 
     }
@@ -16,17 +20,17 @@ export class Qipu extends Component {
     {
         let step:string[]=steps.split('');
         for(let i=0;i<step.length;i++)
-        {
-            let idx=i;
+        {            
             let pieces="车马跑象士将兵車馬炮相仕帥卒帅將";
             let dirs="进退平進";
             let vertidxs="九八七六五四三二一987654321";
             //let fbs="前后";
-            //let fb=fbs.indexOf(step[idx]);
-            let idxpiece=pieces.indexOf(step[idx]);
-            let idxp=idxpiece%Utils.redchs.length;
-            let dir=dirs.indexOf(step[idx])%3;            
-            let vertidx=vertidxs.indexOf(step[idx]);      
+            //let fb=fbs.indexOf(step[idx]);            
+            let idxpiece=pieces.indexOf(step[0]);
+            let idxp=idxpiece%Utils.redchs.length;                        
+            let vertidx=vertidxs.indexOf(step[3]); 
+            let dir=dirs.indexOf(step[2])%3;
+            let pos=vertidxs.indexOf(step[1]);            
             let pics="";
             let x=0,y=0;
             if(idxpiece>13){
@@ -39,6 +43,11 @@ export class Qipu extends Component {
             else
             {
                 pics=Utils.blackchs[idxp];
+            }
+            let idx=pos;
+            if(pos>8)
+            {
+                ;
             }
             if(dir==0)
             {
