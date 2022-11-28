@@ -9,6 +9,6 @@ export class Shi extends Component {
 
     update(deltaTime: number) {
         
-    }
+    }    
 }
 

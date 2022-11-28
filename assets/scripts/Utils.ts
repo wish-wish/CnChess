@@ -15,12 +15,85 @@ export class Utils extends Component {
     public static intercounts:Map<number,(number|Function)[]>=new Map();
     public static uguid:string="id_abc123";
 
+    public static blackchs:string[]=[
+        "black_ju","black_ma","black_pao","black_xiang","black_shi","black_jiang","black_bing"
+    ];
+    public static redchs:string[]=[
+        "red_ju","red_ma","red_pao","red_xiang","red_shi","red_shuai","red_bing"
+    ];
+    public static xChessPos:number[]=[];    
+
     start() {
 
     }
 
     update(deltaTime: number) {
         
+    }
+
+    public static parseHex(str:string,i:number)
+    {
+        // escape()	使用转义序列替换某些字符来对字符串进行编码
+        // unescape()	对使用 escape() 编码的字符串进行解码
+        // encodeURI()	通过转义某些字符对 URI 进行编码
+        // decodeURI()	对使用 encodeURI() 方法编码的字符串进行解码
+        // encodeURIComponent()	通过某些转义字符对 URI 的组件进行编码
+        // deencodeURIComponent()	对使用 encodeURIComponent() 方法编码的字符串进行解码
+
+        // ES6新增了几个专门处理4字节码点的函数。
+        // String.fromCodePoint()：从Unicode码点返回对应字符
+        // String.prototype.codePointAt()：从字符返回对应的码点
+        // String.prototype.at()：返回字符串给定位置的字符
+        
+        let ret:number=0;
+        if(i<str.length)
+        {
+            let ch=str[i];
+            if(ch=='A'||ch=='a')
+            {
+                ret=10;
+            }
+            else if(ch=='B'||ch=='b')
+            {
+                ret=11;
+            }
+            else if(ch=='C'||ch=='c')
+            {
+                ret=12;
+            }
+            else if(ch=='D'||ch=='d')
+            {
+                ret=13;
+            }
+            else if(ch=='E'||ch=='e')
+            {
+                ret=14;
+            }
+            else if(ch=='F'||ch=='f')
+            {
+                ret=15;
+            }
+            else
+            {                
+                ret=Number.parseInt(ch);                
+            }
+        }else
+        {
+            ret=0;   
+        }    
+        return ret;    
+    }
+    public static hex2Num(str:string)
+    {
+        let ret:number=0,hex:number=1;
+        for(let i=0;i<str.length-1;i++)
+        {            
+            let val=this.parseHex(str,str.length-1-i);            
+            ret+=val*hex;
+            //console.log(val+":"+hex+":"+ret);
+            hex*=16;
+        }
+        return ret;
     }
 
     static isInited()
