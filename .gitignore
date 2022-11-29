@@ -7,3 +7,4 @@ native
 node_modules/
 settings/
 *.meta
+*.url
