@@ -1,0 +1,30 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "China_s_Yuan_Renminbi",
+    "atlas": "aea95ded-4417-4aa8-8de6-00b58c942751",
+    "rect": {
+      "x": 421,
+      "y": 349,
+      "width": 74,
+      "height": 72
+    },
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "originalSize": {
+      "width": 74,
+      "height": 72
+    },
+    "rotated": false,
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "texture": "f64e90e1-c028-46c8-8e9e-368e72cd675f@6c48a",
+    "packable": true
+  }
+}

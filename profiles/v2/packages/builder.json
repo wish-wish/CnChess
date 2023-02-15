@@ -1,0 +1,67 @@
+{
+  "__version__": "1.3.2",
+  "log": {
+    "level": 4
+  },
+  "BuildTaskManager": {
+    "taskMap": {
+      "1676459002817": {
+        "id": "1676459002817",
+        "progress": 1,
+        "state": "success",
+        "message": "2023-2-15 19:03 Build success in 9949 ms!",
+        "options": {
+          "name": "CnChess",
+          "platform": "web-mobile",
+          "buildPath": "project://build",
+          "debug": false,
+          "md5Cache": false,
+          "skipCompressTexture": false,
+          "sourceMaps": false,
+          "replaceSplashScreen": true,
+          "mainBundleCompressionType": "merge_dep",
+          "mainBundleIsRemote": false,
+          "mergeStartScene": false,
+          "experimentalEraseModules": false,
+          "compressTexture": true,
+          "packAutoAtlas": true,
+          "startScene": "b5fe3fbf-ad74-48d2-b926-a90e99060d99",
+          "scenes": [
+            {
+              "url": "db://assets/scenes/chess.scene",
+              "uuid": "e8d5225a-c106-4f42-8718-21eff8be2892",
+              "inBundle": false
+            },
+            {
+              "url": "db://assets/scenes/scene.scene",
+              "uuid": "b5fe3fbf-ad74-48d2-b926-a90e99060d99",
+              "inBundle": false
+            }
+          ],
+          "outputName": "web-mobile",
+          "packages": {
+            "web-mobile": {
+              "orientation": "auto",
+              "polyfills": {
+                "asyncFunctions": true
+              }
+            },
+            "cocos-service": {
+              "configID": "996b8c",
+              "services": []
+            }
+          }
+        },
+        "time": "2023-2-15 19:03",
+        "dirty": false
+      }
+    }
+  },
+  "common": {
+    "outputName": "web-mobile",
+    "mainBundleCompressionType": "merge_dep",
+    "platform": "web-mobile",
+    "startScene": "b5fe3fbf-ad74-48d2-b926-a90e99060d99",
+    "replaceSplashScreen": true
+  }
+}

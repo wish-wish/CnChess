@@ -1,0 +1,53 @@
+[
+    1,
+    [
+        "60vBYZAx5FkKi+t9uBWAUr@6c48a"
+    ],
+    [
+        "_textureSource"
+    ],
+    [
+        "cc.SpriteFrame"
+    ],
+    0,
+    [
+        {
+            "name": "qipan_jinggao_2",
+            "rect": {
+                "x": 2,
+                "y": 356,
+                "width": 95,
+                "height": 95
+            },
+            "offset": {
+                "x": -1,
+                "y": 1
+            },
+            "originalSize": {
+                "width": 105,
+                "height": 105
+            },
+            "rotated": false,
+            "capInsets": [
+                0,
+                0,
+                0,
+                0
+            ],
+            "packable": true
+        }
+    ],
+    [
+        0
+    ],
+    0,
+    [
+        0
+    ],
+    [
+        0
+    ],
+    [
+        0
+    ]
+]
