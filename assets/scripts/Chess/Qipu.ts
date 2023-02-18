@@ -21,7 +21,7 @@ export class Qipu extends Component {
         let step:string[]=steps.split('');
         for(let i=0;i<step.length;i++)
         {            
-            let pieces="车马跑象士将兵車馬炮相仕帥卒帅將";
+            let pieces="车马炮象士将兵車馬砲相仕帥卒帅將";
             let dirs="进退平進";
             let vertidxs="九八七六五四三二一987654321";
             //let fbs="前后";

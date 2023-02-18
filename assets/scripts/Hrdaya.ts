@@ -12,20 +12,27 @@ export class Hrdaya extends Component {
     // @property
     // serializableDummy = 0;
 
+    public slicearr:number[][]=[];        
+    @property 
+    public slicefan:number=8;
+
     public arr:number[][]=[];
     @property
     public fansec:number=200;
     @property
     public drawbox:boolean=false;
     public boxcap:boolean=false;
+    @property
+    public centerfan:boolean=false;
+
     idx:number=0;
     idx_fan:number=0;
     xscale:number=3;
     yscale:number=17*1.1;
-    interval:number=0;
+    intervalid:number=0;
     drawtimes:number=0;    
     iscb:boolean=false;    
-    g:Graphics=null!;        
+    g:Graphics=null!;
     
     public pts:Vec2[]=[];
     public minx:number=1;
@@ -44,9 +51,9 @@ export class Hrdaya extends Component {
     @property
     public height:number=2;
     @property
-    public isAnimDraw:boolean=false;
+    public isAnimDraw:boolean=true;
     @property
-    public maxtimes:number=1;
+    public maxtimes:number=130000;
     @property
     public intval:number=30;
     @property
@@ -139,9 +146,40 @@ export class Hrdaya extends Component {
             g!.moveTo(self.arr[0][0],self.arr[0][1]);
             for(let i=0;i<self.arr.length+1;i++)
             {                
-                self.idx=self.Line(g!,self.idx);
+                self.idx=self.Line(g!,self.arr,self.idx);
             }
         }
+    }
+    calcExt(arr:number[][])
+    {
+        let self=this;
+        self.pts=[];
+        let ext:number[]=[];
+        ext.push(arr[0][0]);
+        ext.push(arr[0][0]);
+        ext.push(arr[0][1]);
+        ext.push(arr[0][1]);
+        for(let i=0;i<arr.length+1;i++)
+        {                
+            if(i>=arr.length) continue;
+            if(ext[0]>arr[i][0])
+            {
+                ext[0]=arr[i][0];
+            }
+            if(ext[1]<arr[i][0])
+            {
+                ext[1]=arr[i][0];
+            }
+            if(ext[2]>arr[i][1])
+            {
+                ext[2]=arr[i][1];
+            }
+            if(ext[3]<arr[i][1])
+            {
+                ext[3]=arr[i][1];
+            }                
+        }
+        return ext;
     }
     reCurve()
     {
@@ -149,31 +187,9 @@ export class Hrdaya extends Component {
         if(self.mode==0)
         {
             self.arr=self.Hrdaya(self.fansec,self.fansec,self.fansec);            
-            self.minx=self.maxx=this.arr[0][0];
-            self.miny=self.maxy=this.arr[0][1];
-            self.pts=[];
-            for(let i=0;i<self.arr.length+1;i++)
-            {                
-                if(i>=self.arr.length) continue;
-                if(self.minx>self.arr[i][0])
-                {
-                    self.minx=self.arr[i][0];
-                }
-                if(self.maxx<self.arr[i][0])
-                {
-                    self.maxx=self.arr[i][0];
-                }
-                if(self.miny>self.arr[i][1])
-                {
-                    self.miny=self.arr[i][1];
-                }
-                if(self.maxy<self.arr[i][1])
-                {
-                    self.maxy=self.arr[i][1];
-                }                
-            }
-            self.width=(self.maxx-self.minx);
-            self.height=(self.maxy-self.miny);
+            let minmax=self.calcExt(self.arr);
+            self.width=(minmax[1]-minmax[0]);
+            self.height=(minmax[3]-minmax[2]);
             let rect=self.node.getComponent(UITransform);
             let scalew=self.width/rect.width;
             let scaleh=self.height/rect.height;
@@ -182,12 +198,41 @@ export class Hrdaya extends Component {
                 self.arr[i][0]/=scalew;
                 self.arr[i][1]/=scaleh;
             }
-            self.minx/=scalew;
-            self.miny/=scaleh;
-            self.maxx/=scalew;
-            self.maxy/=scaleh;
-            self.width=(self.maxx-self.minx);
-            self.height=(self.maxy-self.miny);
+            for(let i=0;i<self.slicearr.length;i++)
+            {
+                self.slicearr[i][0]/=scalew;
+                self.slicearr[i][1]/=scaleh;
+            }
+            minmax[1]/=scalew;
+            minmax[3]/=scaleh;
+            minmax[0]/=scalew;
+            minmax[2]/=scaleh;
+            self.width=(minmax[1]-minmax[0]);
+            self.height=(minmax[3]-minmax[2]);
+            //self.slicearr=self.Hrdaya(self.slicefan,self.slicefan,self.slicefan);
+            if(self.slicefan>self.fansec&&self.fansec>20)
+                self.slicearr=self.Hrdaya(self.slicefan,self.slicefan,self.slicefan);
+            else if(self.fansec>self.slicefan)
+            {
+                let factor:number=Math.ceil(self.fansec/self.slicefan);
+                self.slicearr=[];
+                for(let i=0;i<self.arr.length;i++)
+                {
+                    if(i%factor==0&&self.slicearr.length<self.slicefan)
+                    {
+                        self.slicearr.push(self.arr[i]);
+                    }
+                }
+                if(self.slicearr.length<self.slicefan)
+                {
+                    if(self.centerfan)
+                        self.slicearr.push(self.arr[self.arr.length-1]);
+                }
+            }
+            else
+            {
+                self.slicearr=self.arr;
+            }
             //console.log(self.width+":"+self.height);
             if(self.drawbox)
                 self.drawOutline(1);
@@ -202,13 +247,13 @@ export class Hrdaya extends Component {
     {
         const self=this;
         self.isAnimDraw=false;
-        clearInterval(self.interval);
-        self.interval=0;
+        clearInterval(self.intervalid);
+        self.intervalid=0;
     }
     drawFragile(cb:Function)
     {
         let self=this;
-        if(self.arr.length<1) return;                
+        if(self.slicearr.length<1) return;                
 
         let g=self.g;    
         let node=self.node.getChildByName("Node");                
@@ -217,8 +262,10 @@ export class Hrdaya extends Component {
             let g_fan=node!.getComponent(Graphics);         
             if(!g_fan) g_fan=node!.addComponent(Graphics);         
             g_fan!.strokeColor=g.strokeColor; 
-            g_fan!.lineWidth=g.lineWidth;
-
+            if(self.slicefan<20)
+                g_fan!.lineWidth=g.lineWidth*1.5;
+            else
+                g_fan!.lineWidth=g.lineWidth;
             self.iscb=false;
             self.idx=0;
             self.idx_fan=0;
@@ -227,23 +274,23 @@ export class Hrdaya extends Component {
             {                
                 cb(self.idx,"clear");
             }
-            clearInterval(self.interval);
-            self.interval=setInterval(()=>{
+            clearInterval(self.intervalid);
+            self.intervalid=setInterval(()=>{
                 if(self.idx_fan==0)
                 {
                     //g!.clear();
-                    g!.moveTo(self.arr[0][0],self.arr[0][1]);
                     g_fan?.clear();
-                    g_fan?.moveTo(self.arr[0][0],self.arr[0][1]);
+                    g_fan?.moveTo(self.slicearr[0][0],self.slicearr[0][1]);
                     if(self.drawtimes==2&&self.drawbox)
                         self.drawOutline(1);
                 }           
-                self.idx=self.Line(g!,self.idx);
-                self.idx_fan=self.LineFan(g_fan!,self.idx_fan);
+                //self.idx=self.Line(g!,self.arr,self.idx);
+                //self.idx_fan=self.LineFan(g_fan!,self.slicearr,self.idx_fan);
+                self.idx_fan=self.LineSlice(g_fan!,self.slicearr,self.idx_fan);
                 if(self.drawtimes>=self.maxtimes)
                 {
-                    clearInterval(self.interval);
-                    self.interval=0;
+                    clearInterval(self.intervalid);
+                    self.intervalid=0;
                     self.isAnimDraw=false;
                     if(cb){
                         cb(self.drawtimes,"end");                                                                
@@ -251,7 +298,7 @@ export class Hrdaya extends Component {
                 }                
                 if(self.drawtimes>=self.maxtimes-1)
                 {
-                    if(cb&&self.idx>(self.fansec/2)&&!self.iscb)
+                    if(cb&&self.idx_fan>(self.slicefan/2)&&!self.iscb)
                     {
                         self.iscb=true;
                         cb(self.drawtimes,"anim");                        
@@ -259,7 +306,7 @@ export class Hrdaya extends Component {
                 }
                 if(cb)
                 {
-                    cb(self.idx,"idx");
+                    cb(self.idx_fan,"idx");
                 }
             },self.intval);
         }
@@ -267,10 +314,10 @@ export class Hrdaya extends Component {
         {
             self.idx=0;
             g!.clear();
-            g!.moveTo(self.arr[0][0],self.arr[0][1]);
-            for(let i=0;i<self.arr.length+1;i++)
+            g!.moveTo(self.slicearr[0][0],self.slicearr[0][1]);
+            for(let i=0;i<self.slicearr.length+1;i++)
             {                
-                self.idx=self.Line(g!,self.idx);
+                self.idx=self.Line(g!,self.arr,self.idx);
             }
             if(cb)
                 cb(1,"end");
@@ -428,18 +475,19 @@ export class Hrdaya extends Component {
             //TODO:
         }
     }
-    Line(g:Graphics,idx:number)
+    Line(g:Graphics,arr:number[][],idx:number)
     {        
         const self=this;
-        if(idx<self.arr.length)
+        let tail=Math.floor(Math.sqrt(arr.length));
+        if(idx<arr.length)
         {            
-            g!.lineTo(self.arr[idx][0], self.arr[idx][1]);
+            g!.lineTo(arr[idx][0], arr[idx][1]);
             g!.stroke();
             idx+=1;
         }
-        else if(idx<=(self.arr.length+10))
+        else if(idx<=(arr.length+tail))
         {        
-            if(idx==self.arr.length)
+            if(idx==arr.length)
             {                
                 g!.close();
                 g!.stroke();
@@ -447,36 +495,65 @@ export class Hrdaya extends Component {
             }
             idx+=1;
         }
-        else if(idx>(self.arr.length+10))
-        {                    
+        else
+        {         
+            g.clear();           
             self.drawtimes++;
-            g!.moveTo(self.arr[0][0], self.arr[0][1]);
+            g!.moveTo(arr[0][0], arr[0][1]);
             idx=0;
         }
         return idx;        
     }
-    LineFan(g:Graphics,idx:number)
+    LineSlice(g:Graphics,arr:number[][],idx:number)
     {       
         const self=this; 
-        if(idx<self.arr.length)
-        {            
-            g!.lineTo(self.arr[idx][0], self.arr[idx][1]);
-            g!.stroke();
-            g!.moveTo(self.arr[0][0], self.arr[0][1]);
-            g!.lineTo(self.arr[idx][0],self.arr[idx][1]);
-            g!.stroke();
-            idx+=1;
-        }
-        else if(idx<=(self.arr.length+10))
-        {        
-            if(idx==self.arr.length)
-            {                
-                g!.clear();
+        let tail=Math.floor(Math.sqrt(arr.length)*1.5);        
+        if(idx<arr.length)
+        {         
+            if(self.centerfan)
+            {
+                g!.moveTo(0, 0);
             }
+            else
+            {
+                g!.moveTo(arr[0][0], arr[0][1]);
+            }
+            g!.lineTo(arr[idx][0], arr[idx][1]);
+            g!.stroke();            
             idx+=1;
         }
-        else if(idx>(self.arr.length+10))
+        else if(idx<=(arr.length+tail))
+        {
+            idx+=1;
+        }
+        else
+        {            
+            g.clear();        
+            self.drawtimes++;
+            idx=0;
+        }
+        return idx;        
+    }
+    LineFan(g:Graphics,arr:number[][],idx:number)
+    {       
+        const self=this; 
+        let tail=Math.floor(Math.sqrt(arr.length));
+        if(idx<arr.length)
+        {            
+            g!.lineTo(arr[idx][0], arr[idx][1]);
+            g!.stroke();
+            g!.moveTo(arr[0][0], arr[0][1]);//edge
+            g!.lineTo(arr[idx][0],arr[idx][1]);
+            g!.stroke();
+            idx+=1;
+        }
+        else if(idx<=(arr.length+tail))
         {                    
+            idx+=1;
+        }
+        else
+        {         
+            g!.clear();           
             self.drawtimes++;
             idx=0;
         }
