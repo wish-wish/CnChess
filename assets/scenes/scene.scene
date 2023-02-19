@@ -1164,8 +1164,8 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "slicefan": 8,
-    "fansec": 200,
+    "slicefan": 3,
+    "fansec": 7,
     "drawbox": false,
     "centerfan": true,
     "mode": 0,
@@ -1701,8 +1701,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 125.499,
-      "y": 211.481,
+      "x": 109.006,
+      "y": 215.979,
       "z": 0
     },
     "_lrot": {
@@ -1993,8 +1993,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 177.978,
-      "y": 211.481,
+      "x": 110.506,
+      "y": 159,
       "z": 0
     },
     "_lrot": {
