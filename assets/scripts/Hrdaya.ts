@@ -148,6 +148,8 @@ export class Hrdaya extends Component {
             {                
                 self.idx=self.Line(g!,self.arr,self.idx);
             }
+            self.drawOutline(1);
+
         }
     }
     calcExt(arr:number[][])
@@ -207,6 +209,10 @@ export class Hrdaya extends Component {
             minmax[3]/=scaleh;
             minmax[0]/=scalew;
             minmax[2]/=scaleh;
+            self.minx=minmax[0];
+            self.maxx=minmax[1];
+            self.miny=minmax[2];
+            self.maxy=minmax[3];
             self.width=(minmax[1]-minmax[0]);
             self.height=(minmax[3]-minmax[2]);
             //self.slicearr=self.Hrdaya(self.slicefan,self.slicefan,self.slicefan);
@@ -214,28 +220,37 @@ export class Hrdaya extends Component {
                 self.slicearr=self.Hrdaya(self.slicefan,self.slicefan,self.slicefan);
             else if(self.fansec>self.slicefan)
             {
-                let factor:number=Math.ceil(self.fansec/self.slicefan);
+                let factor:number=Math.floor(self.fansec/self.slicefan);
                 self.slicearr=[];
+                self.slicearr.push(self.arr[0]);
                 for(let i=0;i<self.arr.length;i++)
                 {
-                    if(i%factor==0&&self.slicearr.length<self.slicefan)
+                    if((i+1)%factor==0&&self.slicearr.length<self.slicefan)
                     {
-                        self.slicearr.push(self.arr[i]);
+                        let yu=self.fansec%self.slicefan;
+                        if(yu>0) {yu=1;} else {yu=0};
+                        let idx=(i+1+yu)%self.arr.length;
+                        if(self.slicearr.indexOf(self.arr[idx])<0)
+                            self.slicearr.push(self.arr[idx]);
+
+                        /*
+                           let yu=self.fansec%self.slicefan;
+                            let inc=0;
+                            if(yu>0&&(self.slicearr.length+yu)>self.slicefan) {
+                                inc=1;
+                                yu-=1;
+                            } 
+                            let idx=(i+1+inc)%self.arr.length;
+                            if(self.slicearr.indexOf(self.arr[idx])<0)
+                                self.slicearr.push(self.arr[idx]);
+                        */
                     }
-                }
-                if(self.slicearr.length<self.slicefan)
-                {
-                    if(self.centerfan)
-                        self.slicearr.push(self.arr[self.arr.length-1]);
                 }
             }
             else
             {
                 self.slicearr=self.arr;
-            }
-            //console.log(self.width+":"+self.height);
-            if(self.drawbox)
-                self.drawOutline(1);
+            }            
         }
         else if(self.mode==1)
         {
@@ -280,10 +295,9 @@ export class Hrdaya extends Component {
                 {
                     //g!.clear();
                     g_fan?.clear();
-                    g_fan?.moveTo(self.slicearr[0][0],self.slicearr[0][1]);
-                    if(self.drawtimes==2&&self.drawbox)
-                        self.drawOutline(1);
+                    g_fan?.moveTo(self.slicearr[0][0],self.slicearr[0][1]);                    
                 }           
+                self.drawOutline(1);
                 //self.idx=self.Line(g!,self.arr,self.idx);
                 //self.idx_fan=self.LineFan(g_fan!,self.slicearr,self.idx_fan);
                 self.idx_fan=self.LineSlice(g_fan!,self.slicearr,self.idx_fan);
@@ -319,6 +333,7 @@ export class Hrdaya extends Component {
             {                
                 self.idx=self.Line(g!,self.arr,self.idx);
             }
+            self.drawOutline(1);            
             if(cb)
                 cb(1,"end");
         }
@@ -454,14 +469,17 @@ export class Hrdaya extends Component {
         {
             g_box=box.addComponent(Graphics);
         }
-        g_box?.clear();        
-        g_box!.strokeColor=self.g.strokeColor;
-        g_box!.moveTo(rect[0].x,rect[0].y);
-        g_box!.lineTo(rect[1].x,rect[1].y);
-        g_box!.lineTo(rect[2].x,rect[2].y);
-        g_box!.lineTo(rect[3].x,rect[3].y);
-        g_box!.lineTo(rect[0].x,rect[0].y);
-        g_box!.stroke();
+        g_box?.clear();       
+        if(self.drawbox)
+        {
+            g_box!.strokeColor=self.g.strokeColor;
+            g_box!.moveTo(rect[0].x,rect[0].y);
+            g_box!.lineTo(rect[1].x,rect[1].y);
+            g_box!.lineTo(rect[2].x,rect[2].y);
+            g_box!.lineTo(rect[3].x,rect[3].y);
+            g_box!.lineTo(rect[0].x,rect[0].y);
+            g_box!.stroke();
+        }         
     }
     inHrdaya(pt:Vec2)
     {

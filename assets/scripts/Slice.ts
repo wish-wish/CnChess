@@ -16,14 +16,16 @@ export class Slice extends Component {
         {
             hd.slicefan=2;
         }        
-        if(hd.slicefan>(hd.fansec-1))
+        if(hd.slicefan>(hd.fansec-2))
         {
-            hd.slicefan=(hd.fansec-1);
+            hd.slicefan=(hd.fansec-2);
         }
         eb.string=hd.fansec.toString();
         feb.string=hd.slicefan.toString();
         let tog=this.node.getChildByName("Toggle").getComponent(ToggleComponent);
         hd.centerfan=tog.isChecked;
+        let togb=this.node.getChildByName("ToggleBox").getComponent(ToggleComponent);
+        hd.drawbox=togb.isChecked;
         this.clampSpeed();
     }
 
@@ -49,12 +51,18 @@ export class Slice extends Component {
         let hd=this.getComponentInChildren(Hrdaya);
         let tog=this.node.getChildByName("Toggle").getComponent(ToggleComponent);
         hd.centerfan=tog.isChecked;
-        let num=20,fnum=20;
+        let togb=this.node.getChildByName("ToggleBox").getComponent(ToggleComponent);
+        hd.drawbox=togb.isChecked;
+        let num=20,fnum=18;
         try {
-            num=Number.parseInt(eb.string);    
-            fnum=Number.parseInt(feb.string);
+            num=Number.parseInt(eb.string);                
         } catch (error) { 
-                       
+            num=hd.fansec;
+        }
+        try {
+            fnum=Number.parseInt(feb.string);
+        } catch (error) {
+            fnum=hd.slicefan;
         }
         if(num<4)
         {
@@ -64,9 +72,9 @@ export class Slice extends Component {
         {
             fnum=2;
         }
-        if(fnum>(num-1))
+        if(fnum>(num-2))
         {
-            fnum=(num-1);
+            fnum=(num-2);
         }
         hd.fansec=num;
         hd.slicefan=fnum;
@@ -79,11 +87,22 @@ export class Slice extends Component {
         });
     }
 
-    onCheck()
+    onCheck()    
     {
         let tog=this.node.getChildByName("Toggle").getComponent(ToggleComponent);
         let hd=this.getComponentInChildren(Hrdaya);
         hd.centerfan=tog.isChecked;
+        // hd.Draw();    
+        // hd.reCurve();
+        // hd.reDraw((t:number,act:string)=>{            
+        // });
+    }
+
+    onCheckBox()
+    {
+        let tog=this.node.getChildByName("ToggleBox").getComponent(ToggleComponent);
+        let hd=this.getComponentInChildren(Hrdaya);
+        hd.drawbox=tog.isChecked;
         // hd.Draw();    
         // hd.reCurve();
         // hd.reDraw((t:number,act:string)=>{            
